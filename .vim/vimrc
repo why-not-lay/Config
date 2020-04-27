@@ -1,0 +1,24 @@
+set number
+set cursorline
+set showcmd
+set hlsearch
+exec "nohlsearch"
+set incsearch
+set ignorecase
+set smartcase
+set expandtab
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+noremap j h
+noremap k j
+noremap i k
+noremap h i
+
+call plug#begin('~/.vim/plugged')
+Plug 'vim-airline/vim-airline'
+Plug 'connorholyday/vim-snazzy'
+Plug 'scrooloose/nerdtree'
+call plug#end()
+
+color snazzy

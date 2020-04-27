@@ -64,6 +64,7 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'majutsushi/tagbar'
+Plug 'junegunn/vim-peekaboo'
 call plug#end()
 
 "============

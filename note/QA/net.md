@@ -30,3 +30,12 @@ network:
 ## 查看网卡
 * ifconfig指令
 
+### 打开热点(18.04)
+1. 命令
+~~~
+nm-connection-editor
+~~~
+2. +号添加wifi热点
+3. 详情链接[hotpot](https://www.jianshu.com/p/5a6917148c1c)
+
+

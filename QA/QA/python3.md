@@ -1,0 +1,10 @@
+# python3
+> [文档](https://docs.python.org/3.7/library/index.html)
+> [教程](https://python3-cookbook.readthedocs.io/zh_CN/latest/preface.html)
+* 正则表达式
+> 匹配串patten中"\\\\\\\\"代表字符串中的"\\\\"，代表着显示"\\"，如果使用r"\\"会直接显示"\\"  
+> 正则表达式的patten首先是字符串转义，然后再是正则转义  
+> [转义](https://www.jianshu.com/p/9e71a8b2e48a)  
+> [re模块](https://docs.python.org/zh-cn/3.7/library/re.html?highlight=re#module-re)
+* flask
+> [flask](https://flask.palletsprojects.com/en/1.1.x/)

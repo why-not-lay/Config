@@ -1,3 +1,8 @@
+"路径配置
+let g:python_host_prog='/usr/bin/python2'
+let g:python3_host_prog='/usr/bin/python3'
+
+"常规配置
 let mapleader=" "
 set number
 set cursorline
@@ -6,6 +11,7 @@ set relativenumber
 
 set hlsearch
 exec "nohlsearch"
+
 set incsearch
 set ignorecase
 set smartcase
@@ -25,8 +31,8 @@ noremap k j
 noremap i k
 noremap h i
 noremap H I
-noremap I 5k
-noremap K 5j
+noremap I 7k
+noremap K 7j
 noremap = nzz
 noremap - Nzz
 
@@ -35,10 +41,10 @@ map S :w<CR>
 map Q :q<CR>
 map R :source ~/.config/nvim/init.vim<CR>
 "分屏
-map fi :set nosplitbelow<CR>:split<CR>
-map fk :set splitbelow<CR>:split<CR>
-map fl :set splitright<CR>:vsplit<CR>
-map fj :set nosplitright<CR>:vsplit<CR>
+map zi :set nosplitbelow<CR>:split<CR>
+map zk :set splitbelow<CR>:split<CR>
+map zl :set splitright<CR>:vsplit<CR>
+map zj :set nosplitright<CR>:vsplit<CR>
 map sv <C-w>t<C-w>H
 map sh <C-w>t<C-w>K
 map <LEADER>i <C-w>k
@@ -54,8 +60,19 @@ map t0 :tabe<CR>
 map tl :+tabnext<CR>
 map tj :-tabnext<CR>
 
+"控制台
+map <M-t> zk:te<CR>
+tnoremap <Esc> <C-\><C-n>
+
+"===========
+"===========
+"vim-plug
+"===========
+"===========
+
 call plug#begin('~/.vim/plugged')
 Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'connorholyday/vim-snazzy'
 Plug 'scrooloose/nerdtree'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
@@ -66,6 +83,13 @@ Plug 'dhruvasagar/vim-table-mode'
 Plug 'majutsushi/tagbar'
 Plug 'junegunn/vim-peekaboo'
 call plug#end()
+
+"===========
+"===========
+"vim-airline
+"===========
+"===========
+
 
 "============
 "Snazzy
@@ -81,6 +105,7 @@ color snazzy
 map tt :NERDTreeToggle<CR>
 "map fc :NERDTreeClose<CR>
 let NERDTreeMapOpenSplit = "S"
+
 
 "============
 "MarkdownPreview
@@ -172,19 +197,13 @@ let g:mkdp_page_title = '「${name}」'
 "C0C
 "=================
 "=================
+let g:coc_global_extensions = ['coc-snippets','coc-translator','coc-tsserver','coc-json','coc-pairs','coc-highlight','coc-emmet','coc-html','coc-css','coc-python','coc-clangd','coc-vimlsp']
 " TextEdit might fail if hidden is not set.
 set hidden
 
-" Some servers have issues with backup files, see #649.
-set nobackup
-set nowritebackup
-
-" Give more space for displaying messages.
-set cmdheight=2
-
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
-set updatetime=300
+set updatetime=100
 
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
@@ -193,6 +212,7 @@ set shortmess+=c
 " diagnostics appear/become resolved.
 set signcolumn=yes
 
+"补全切换TAB
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
@@ -207,33 +227,39 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
+"打开补全
 " Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
+inoremap <silent><expr> <c-x> coc#refresh()
 
+"确认补全项
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
 " position. Coc only does snippet and additional edit on confirm.
+" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
+if exists('*complete_info')
+  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
 
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+"跳转可利用<C-o>返回
 
-"inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
-
-"if has('patch8.1.1068')
-"  " Use `complete_info` if your (Neo)Vim version supports it.
-"  inoremap <expr> <s-cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-"else
-"  imap <expr> <s-cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-"endif
-
+"报错跳转
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
+"函数相关跳转
 " GoTo code navigation.
+"跳转到函数定义
 nmap <silent> gd <Plug>(coc-definition)
+"跳转到类型定义
 nmap <silent> gy <Plug>(coc-type-definition)
+"
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
+
+" 显示文档
 " Use K to show documentation in preview window.
 nnoremap <silent> <c-k> :call <SID>show_documentation()<CR>
 
@@ -245,12 +271,15 @@ function! s:show_documentation()
   endif
 endfunction
 
+"同词高亮
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
+"重命名
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 
+"代码格式化
 " Formatting selected code.
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
@@ -321,6 +350,26 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 autocmd CursorHold * silent call CocActionAsync('highlight')
 set termguicolors
 
+" coc-translator
+nnoremap , :CocCommand translator.popup<CR>
+
+" coc-snippets
+" Use <C-l> for trigger snippet expand.
+imap <C-l> <Plug>(coc-snippets-expand)
+
+" Use <C-j> for select text for visual placeholder of snippet.
+vmap <C-j> <Plug>(coc-snippets-select)
+
+" Use <C-j> for jump to next placeholder, it's default of coc.nvim
+let g:coc_snippet_next = '<c-j>'
+
+" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+let g:coc_snippet_prev = '<c-k>'
+
+" Use <C-j> for both expand and jump (make expand higher priority.)
+imap <C-j> <Plug>(coc-snippets-expand-jump)
+
+
 
 "===========
 "===========
@@ -355,7 +404,6 @@ inoreabbrev <expr> __
           \ <SID>isAtStartOfLine('__') ?
           \ '<c-o>:silent! TableModeDisable<cr>' : '__'
 
-
 "===========
 "===========
 "tarbar
@@ -364,3 +412,47 @@ inoreabbrev <expr> __
 nmap tb :TagbarToggle<CR>
 let g:tagbar_map_showproto = '<C-h>'
 let g:tagbar_map_togglecaseinsensitive = 'S'
+
+
+"===========
+"===========
+"一键编译并运行
+"===========
+"===========
+
+"下一个错误
+nmap <leader>cn :cn<CR>
+"上一个错误
+nmap <leader>cp :cp<CR>
+"错误列表
+nmap <leader>cw :cw<CR>
+
+"编译并运行
+noremap <F5> :call Compile()<CR>
+function! Compile()
+  normal S
+  "C++
+  if &filetype == 'cpp'
+    execute "make"
+    let s:error_list_len = len(getqflist())
+    if s:error_list_len == 0
+      normal zk
+      execute "te! time ./test"
+    else
+      execute "cw"
+    endif
+  "python3
+  elseif &filetype == 'python'
+    normal zk
+    execute "te! python3 %"
+  endif
+endfunction
+
+"===========
+"===========
+"gdb调试(C++)
+"===========
+"===========
+noremap <F9> :call GdbDebug()<CR>
+function! GdbDebug()
+endfunction

@@ -47,4 +47,40 @@ set.equal_range(key)
 ~~~
 > equal_range返回值为pair<iterator,iterator> ,第一个属性(first)表示大于等于k的迭代器位置,第二个(second)是大于k的迭代器位置
 
+#### stack
+* 一般用list或deque实现
+* FILO
+
+用法
+~~~C++
+//定义
+stack<int> s1;
+//入栈
+s1.push(element);
+//获取栈顶元素
+s1.top();
+//获取栈的大小
+s1.size();
+//出栈
+s1.pop();
+//栈是否为空
+s1.empty();
+~~~
+
+#### queue
+* 底层一般用list或deque实现
+
+用法
+~~~C++
+//定义
+queue<int> q;
+//入队
+q.push(element);
+//判断是否为空
+q.empty();
+//获取队列头部元素
+q.front();
+//出队
+q.pop();
+~~~
 

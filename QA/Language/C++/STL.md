@@ -47,6 +47,23 @@ set.equal_range(key)
 ~~~
 > equal_range返回值为pair<iterator,iterator> ,第一个属性(first)表示大于等于k的迭代器位置,第二个(second)是大于k的迭代器位置
 
+补充
+
+仿函数
+~~~C++
+//定义仿函数结构体
+struct <FunctionName>
+{
+  //重载括号操作符,比较大小
+  bool operator()(const <type> &left, const <type> &right){
+    //比较操作
+    return true;
+    //比较操作
+    return false;
+  }
+}
+~~~
+
 #### stack
 * 一般用list或deque实现
 * FILO
@@ -83,6 +100,36 @@ q.front();
 //出队
 q.pop();
 ~~~
+
+
+#### priority_queue
+* 底层一般为vector, 堆heap为处理规则来管理底层容器实现
+* 分为最小值优先队列和最大值优先队列,此处的最大值和最小值是指队头元素
+
+用法
+
+
+~~~C++
+//默认最大值优先
+priority_queue<int> p;
+
+/*
+  *定义最大值优先级队列
+  *less为仿函数
+*/
+priority_queue<int,vector<int>,less<int>> p2;
+
+/*
+  *定义最小值优先队列
+  *greater为仿函数
+*/
+priority_queue<int, vector<int>,greater<int>> p3;
+
+//获取头部元素
+p.top();
+~~~
+> 其他操作类似queue
+
 
 #### vector
 * 动态数组,在堆中分配内存,元素连续存放,有保留内存,如果减少大小后,内存也不会释放;如果大小增大后,会重新分配内存

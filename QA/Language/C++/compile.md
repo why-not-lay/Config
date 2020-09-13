@@ -2,6 +2,9 @@
 * gcc编译c++文件
 > 利用-o 编译成目标文件  
 > 利用-lstdc++ 选项或者g++命令链接(这是因为gcc是不会自动c++程序的库)
+
+* gdb调试
+> -c 的时候要添加-g参数
 * [编译步骤](http://www.ruanyifeng.com/blog/2014/11/compiler.html)
   1. 配置(configure)
   2. 确定标准库和头文件位置

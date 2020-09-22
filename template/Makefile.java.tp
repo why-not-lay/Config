@@ -1,0 +1,21 @@
+#create src list
+
+tmp = $(subst ../target/,,$(shell find ../target -name "Run.class"))
+tmp2 = $(subst /,.,$(tmp))
+run = $(subst .class,,$(tmp2))
+all : clear compile clean
+
+compile : javaFile.txt
+	@javac -cp "../lib/*" -d ../target @javaFile.txt
+
+javaFile.txt :
+	@find ../src -name "*.java" > javaFile.txt
+
+clean : 
+	@rm -rf javaFile.txt
+
+clear :
+	@rm -rf ../target/*
+
+run : 
+	@java -cp ../target $(run)

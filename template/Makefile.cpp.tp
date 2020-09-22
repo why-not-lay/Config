@@ -1,0 +1,18 @@
+
+include = $(shell find ../include/ -name "*.h")
+src = $(shell find ./ -name "*.cpp")
+obj = $(src:%.cpp=%.o)
+
+all : test clean
+
+test : $(obj) $(include)
+	@g++ $(obj) -o test
+
+%.o : %.cpp $(include)
+	@gcc -c $< -o $@
+
+clean : 
+	@rm $(obj)
+
+gdbtest : $(obj) $(include)
+	@g++ -g $(obj) -o test

@@ -1,5 +1,16 @@
 #com
 
-apt和apt-get的区别
-* apt的命令和apt-get类似,但apt并没有向后兼容apt-get
+### apt和apt-get的区别
+apt的命令和apt-get类似,但apt并没有向后兼容apt-get
+
 [apt和apt-get区别](https://juejin.im/post/6844903939087810567)
+
+### uniq去重
+单纯用uniq并不能直接去重,需要和sort搭配使用
+> 因为uniq指令是对邻近的重复行合并
+
+### base64
+基于64个可打印字符来表示二进制数据的方法,每个单元6 bits  
+一般用于处理文本数据的场合,用于表示,传输,存储一些二进制数据
+
+

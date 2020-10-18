@@ -2,6 +2,7 @@
 include = $(shell find ../include/ -name "*.h")
 src = $(shell find ./ -name "*.cpp")
 obj = $(src:%.cpp=%.o)
+objgdb = $(src:%.cpp=%.gdb.o)
 
 all : test clean
 
@@ -14,5 +15,14 @@ test : $(obj) $(include)
 clean : 
 	@rm $(obj)
 
-gdbtest : $(obj) $(include)
-	@g++ -g $(obj) -o test
+
+gdb : gdbtest gdbclean
+
+%.gdb.o : %.cpp $(include)
+	@g++ -c $< -o $@ -g
+
+gdbtest : $(objgdb) $(include)
+	@g++ $(objgdb) -o gdbtest
+
+gdbclean :
+	@rm $(objgdb)

@@ -1,6 +1,7 @@
 "路径配置
 let g:python_host_prog='/usr/bin/python2'
-let g:python3_host_prog='/usr/bin/python3'
+"let g:python3_host_prog='/usr/bin/python3'
+let g:python3_host_prog='/usr/bin/python3.7'
 
 "常规配置
 let mapleader=" "
@@ -26,15 +27,19 @@ set list
 set backspace=indent,eol,start
 set scrolloff=10
 
-noremap j h
-noremap k j
-noremap i k
+noremap j hzz
+noremap k jzz
+noremap i kzz
 noremap h i
 noremap H I
-noremap I 7k
-noremap K 7j
+noremap I 5kzz
+noremap K 5jzz
 noremap = nzz
 noremap - Nzz
+noremap 0 ^
+noremap ^ 0
+noremap G Gzz
+noremap <C-o> <C-o>zz
 
 map s <nop>
 map S :w<CR>
@@ -82,6 +87,7 @@ Plug 'honza/vim-snippets'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'majutsushi/tagbar'
 Plug 'junegunn/vim-peekaboo'
+Plug 'Chiel92/vim-autoformat'
 call plug#end()
 
 "===========
@@ -197,7 +203,7 @@ let g:mkdp_page_title = '「${name}」'
 "C0C
 "=================
 "=================
-let g:coc_global_extensions = ['coc-snippets','coc-translator','coc-tsserver','coc-json','coc-pairs','coc-highlight','coc-emmet','coc-html','coc-css','coc-python','coc-clangd','coc-vimlsp']
+let g:coc_global_extensions = ['coc-java','coc-snippets','coc-translator','coc-tsserver','coc-json','coc-pairs','coc-highlight','coc-emmet','coc-html','coc-css','coc-python','coc-clangd','coc-vimlsp']
 " TextEdit might fail if hidden is not set.
 set hidden
 
@@ -444,7 +450,21 @@ function! Compile()
   "python3
   elseif &filetype == 'python'
     normal zk
-    execute "te! python3 %"
+    execute "te! python3.7 %"
+  "markdown
+  elseif &filetype == 'markdown'
+    execute "MarkdownPreview"
+  "java
+  elseif &filetype == 'java'
+    execute "make"
+    let s:error_list_len = len(getqflist())
+    if s:error_list_len == 0
+      "主类名为Run.class
+      normal zk
+      execute "te! make run"
+    else
+      execute "cw"
+    endif
   endif
 endfunction
 
@@ -455,4 +475,92 @@ endfunction
 "===========
 noremap <F9> :call GdbDebug()<CR>
 function! GdbDebug()
+  normal S
+  "C++
+  if &filetype == 'cpp'
+    execute "make gdb"
+    let s:error_gdb_len = len(getqflist())
+    if s:error_gdb_len == 0
+      normal t0
+      execute "te! gdb -q -tui ./gdbtest"
+    else
+      execute "cw"
+    endif
+  endif
+
 endfunction
+
+"===========
+"===========
+"一键注释
+"===========
+"===========
+"<C-_>为<C-/>
+noremap <C-_> :call Notes()<CR>
+function! Notes()
+  if &filetype == 'cpp'
+    normal ^h//
+  elseif &filetype == 'java'
+    normal ^h//
+  elseif &filetype == 'python'
+    normal ^h#
+  elseif &filetype == 'vim'
+    normal ^h"
+  endif
+endfunction
+
+
+"===========
+"===========
+"一键反注释
+"===========
+"===========
+noremap <C-\> :call NotNotes()<CR>
+function! NotNotes() 
+  normal 0
+  let s:cur_start = expand("<cWORD>")
+  if &filetype == 'cpp'
+    if s:cur_start =~ "//"
+      normal 0dldl
+    endif
+  elseif &filetype == 'java'
+    if s:cur_start =~ "//"
+      normal 0dldl
+    endif
+  elseif &filetype == 'python'
+    if s:cur_start =~ "#"
+      normal 0dl
+    endif
+  elseif &filetype == 'vim'
+    if s:cur_start =~ """
+      normal 0dl
+    endif
+  endif
+endfunction
+
+
+"===========
+"===========
+"vim-autoformat
+"===========
+"===========
+noremap <F3> :Autoformat<CR>
+
+"path for format
+"let g:formatterpath = ['~/.config/nvim/formatter/']
+
+"当保存文件是自动格式化
+au BufWrite *.cpp,*.js,*.java,*.py,*.c,*.h,*.html,*.css :Autoformat
+
+"开启详细模式便于查错
+"let g:autoformat_verbosemode=1 
+
+"cpp&c
+let g:formatdef_clangformat_google = '"clang-format -style google -"'
+let g:formatters_c = ['clangformat_google']
+
+let g:formatters_cpp = ['clangformat_google']
+
+"java
+let g:formatdef_astyleformat_java ='"astyle --style=java"'
+let g:formatters_java = ['astyleformat_java']

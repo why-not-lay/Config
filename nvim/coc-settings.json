@@ -8,5 +8,6 @@
   "snippets.ultisnips.directories": [
     "UltiSnips",
     "$HOME/.config/nvim/UltiSnips/",
-  ]
+  ],
+  "java.trace.server": "verbose"
 }

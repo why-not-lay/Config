@@ -33,3 +33,6 @@
 
 ![rot13](./pic/rot13.png)
 > 可利用指令`tr 'A-Za-z' 'N-ZA-Mn-za-m'` 替换
+
+### tty和图形界面的切换
+`ctrl + alt + F1` 图形界面解决妨碍

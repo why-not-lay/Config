@@ -1,4 +1,3 @@
-
 include = $(shell find ../include/ -name "*.h")
 src = $(shell find ./ -name "*.cpp")
 obj = $(src:%.cpp=%.o)

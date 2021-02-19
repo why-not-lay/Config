@@ -17,3 +17,14 @@ apt的命令和apt-get类似,但apt并没有向后兼容apt-get
 从内存或其他设备,二进制文件中进行十六进制转储
 > 可利用xxd转换成二进制文件
 
+### xrandr
+用于设置屏幕大小、方向、镜像等
+
+`xrandr`：查看输出屏幕情况
+
+`xrandr --output eDP-1-1 --off`：关闭指定屏幕
+
+`xrandr --output eDP-1-1 --left-of/--right-of/--above/--below/--same-as HDMI-0`：拓展
+
+> HDMI-0, eDP-1-1
+

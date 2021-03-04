@@ -6,6 +6,59 @@
 * 如果要设置字体颜色直接用color属性
 > [color属性](https://www.w3school.com.cn/cssref/pr_text_color.asp)
 
+### 引用的三种方式
+#### 嵌入式
+~~~HTML
+<head>
+  <style type="text/css">
+    /*
+    * CSS样式
+    *
+    */
+  </style>
+</head>
+~~~
+
+#### 内联式
+~~~HTML
+<html>
+  <body>
+    <p style="CSS样式"/>
+  </body>
+</html>
+~~~
+
+#### 外部引用式
+##### 使用样式表的处理指令语句
+~~~HTML
+<?xml-stylesheet type="text/css" href="xxx.css"?>
+<html>
+</html>
+~~~
+只有使用xml语法格式编写的html才能使用该指令，JS不能处理这种CSS
+
+##### 使用@import指令
+~~~HTML
+<head>
+  <style type="text/css">
+    @import "xxx.css";
+    //或者 
+    @import url("xxx.css");
+  </style>
+</head>
+~~~
+##### 使用link元素
+~~~HTML
+<head>
+  <link rel="stylesheet" href="xxx.css" type="text/css"/>
+</head>
+~~~
+
+#### 链接
+[博客园](https://www.cnblogs.com/liangxiaofeng/p/5653565.html)
+
+
+
 
 ### 块级元素和行内元素
 #### 块级元素

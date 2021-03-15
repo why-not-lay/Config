@@ -212,11 +212,17 @@ js中，几乎所有的对象都是Object类型的实例，它们都会从`Objec
 | create | 使用现有的对象来提供新创建的对象的__proto__          |                          |
 | assign | 将所有可枚举属性的值从一个或多个源对象分配到目标对象 | 第一个参数会接受后续属性 |
 
+##### prototype方法
+| 函数名         | 用处                                                 | 备注 |
+|----------------|------------------------------------------------------|------|
+| hasOwnProperty | 用于指示对象自身属性中是否具有指定的属性，返回布尔值 |      |
+
 ### Array
 ##### prototype方法
-| 函数名 | 用处                                                                 | 备注 |
-|--------|----------------------------------------------------------------------|------|
-| map    | 创建一个新的数组，结果是该数组中的每个元素调用一次提供函数后的返回值 |      |
+| 函数名  | 用处                                                                 | 备注                                   |
+|---------|----------------------------------------------------------------------|----------------------------------------|
+| map     | 创建一个新的数组，结果是该数组中的每个元素调用一次提供函数后的返回值 |                                        |
+| forEach | 对函数的每个元素执行一次给定的函数                                   | 如果遇到已删除或者未初始化的项会被跳过，会给callback传三个参数：数组当前值，数组当前项索引，数组对象本身 |
 
 ### Function
 ##### 描述
@@ -386,3 +392,176 @@ eval函数上下文：执行在eval函数内部代码
 js中，变量和和函数可以在声明之前进行初始化和使用(var)
 > 提升的是声明，初始化不会被提升  
 > 函数的声明会被优先提升
+
+### promise
+#### 有什么用
+表示一个异步操作的最终完成(或失败)及其结果值。它能够把异步操作最终的成功返回值或者失败原因和相应的处理程序关联起来，异步方法不会立即返回最终的值，而是返回一个promise
+#### 三种状态
+* 待定(pending)：初始态
+* 接受(fulfilled)：成功
+* 拒绝(rejected)：失败
+
+当状态发生改变，promise的then的相关方法就会被调用
+#### 用法
+~~~javascript
+let p = new Promise((resolve, reject) => {
+  //
+  //code
+  //
+  // resolve(somevalue); //-> fulfilled
+  // reject(somevalue);  //-> rejected
+});
+~~~
+
+### 函数防抖和节流
+#### 防抖
+##### 是什么
+在时间被触发n秒后再执行回调，如果在这n秒内被再次触发，则重新计时
+##### 实现
+~~~javascript
+function debounce(fn,delay){
+  var timer;
+  return function(){
+    var _this = this;
+    var args = arguments;
+    if(timer){
+      clearTimeout(timer);
+    }
+    timer = setTimeout(function(){
+      fn.apply(_this,args);
+    },delay);
+  }
+}
+~~~
+
+#### 节流
+##### 是什么
+每隔一段时间才执行一次函数
+##### 实现
+~~~javascript
+function throttle(fn,delay){
+  var timer;
+  return function(){
+    var _this = this;
+    var args = arguments;
+    if(timer){
+      return;
+    }
+    timer = setTimeout(function(){
+      fn.apply(_this,args);
+      timer = null;
+    },delay);
+  }
+}
+~~~
+
+
+
+
+
+### Event Loop
+#### V8引擎
+V8引擎中具有Call Stack和heap，其中heap用于分配内存，而Call Stack是JS代码执行时候的栈，由于Js是单线程的，所以JS只有一个stack。
+#### Event Loop机制
+##### 任务队列
+js中存在多种任务队列，分为宏任务和微任务
+* 宏任务：`setTimeout、setInterval、I/O、UI rendering`
+* 微任务：`process.nextTick、Promise、MutationObserver`
+
+上述描述的setTimeout等是指一种任务源，其对应一种任务队列，真正放入任务队列的是任务源指定的异步任务。任务源指定的异步任务不是立即放入任务队列中，而是在收到相应结果后才被放入
+
+宏任务优先级：setTimeout > setInterval > I/O  
+微任务优先级：Promise > Object.observe > MutationObserver
+
+对于UI rendering来说，每次清空微任务队列后会根据情况触发
+##### 机制
+1. 主线程执行JS代码，形成上下文栈，当遇到各种任务源时将其所指定的异步任务挂起，接受到响应结果后将异步任务放入对应的任务队列中，知道栈中只剩下全局上下文
+2. 将微任务队列中的所有任务队列按优先级、单个任务队列的异步任务入栈并执行，直到清空所有的微任务队列
+3. 将宏任务队列中优先级最高的任务队列中的异步任务入栈执行
+4. 重复2,3步骤，直至全局上下文出栈
+
+### 懒加载和预加载
+#### 懒加载(延迟加载)
+##### 是什么
+指的是在长网页中延迟加载图像。用户滚动到它们之前，可视区域外的图像不会加载。
+##### 作用
+* 提升用户体验
+* 减少无效资源加载
+* 防止并发加载的资源过多会阻塞js的加载
+##### 原理
+首先将图片的src设为空字符串，图片的真实路径设置在data-original属性中。当页面滚动时候坚挺scroll事件，在scroll事件回调中判断图片是否进入了可视区域，如果在则将图片的src设置为data-origin
+##### 实现
+~~~html
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lazyload</title>
+    <style>
+      .image-item {
+	    display: block;
+	    margin-bottom: 50px;
+	    height: 200px;//一定记得设置图片高度
+	}
+    </style>
+</head>
+<body>
+<img src="" class="image-item" lazyload="true"  data-original="images/1.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/2.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/3.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/4.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/5.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/6.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/7.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/8.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/9.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/10.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/11.png"/>
+<img src="" class="image-item" lazyload="true"  data-original="images/12.png"/>
+<script>
+  
+</script>
+</body>
+</html>
+~~~
+
+#### 预加载
+##### 是什么
+将所需要的资源提前请求要求加载到本地，这样后面在需要用到时直接从缓存中提取资源
+
+### offset, client, scroll
+#### offset
+##### offsetParent
+偏移量就需要有个基准,基准就是该元素的offsetParent
+
+offsetParent是该元素最近的定位(即不为`position:static`)的定位元素或者最近的`table,td,th,body`元素。当该元素的`display:none`时，`offsetParent`为`null`
+
+当该元素的`position:fixed`时，`offsetParent`也为`null`
+##### offset属性
+| 名           | 义                                           | 备注                                                             |
+|--------------|----------------------------------------------|------------------------------------------------------------------|
+| offsetHeight | 元素的像素高度包含元素垂直内边距和边框       | 包含水平滚动条                                                   |
+| offsetWidth  | 元素宽度包含元素水平内边距和边框             | 包含垂直滚动条                                                   |
+| offsetLeft   | 元素左上角相当于`offsetParent`的左边界偏移量 | 块级元素相对于边界框，可被截断的行内元素相对于第一个边界框的位置 |
+| offsetTop    | 元素相对于`offsetParent`元素顶部内边距的距离 |                                                                  |
+#### client
+##### client属性
+| 名           | 义                                         | 备注                                 |
+|--------------|--------------------------------------------|--------------------------------------|
+| clientHeight | 元素内部高度，包含内边距但不包括水平滚动条 | 没有定义css或者内联布局盒子的元素为0 |
+| clientWidth  | 元素内部宽度，包含内边距但不包括垂直滚动条 | 没有定义css或者内联布局盒子的元素为0 |
+| clientLeft   | 元素左边框的宽度，不包含做外边距和左内边距 | 包括左边的垂直不懂条                 |
+| clientTop    | 元素顶部边框宽度                           |                                      |
+
+#### scroll
+##### scroll属性
+| 名           | 义                           | 备注                                                                                      |
+|--------------|------------------------------|-------------------------------------------------------------------------------------------|
+| scrollHeight | 元素内容高度，包括溢出的内容 |                                                                                           |
+| scrollWidth  | 元素内容宽度，包括溢出的内容 |                                                                                           |
+| scrollLeft   | 元素滚动条到元素左边的距离   | 如果内容排列方向是rtl(right-to-left),那么滚动条会位于最右侧，初始值为0，拖动时会变成负数 |
+| scrollTop    | 滚动条距离开始的像素         |                                                                                           |
+
+#### getBoundingClientRect函数
+该方法返回元素的大小相对于视口的位置
+> 左上角，右下角，长，宽
+

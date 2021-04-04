@@ -137,9 +137,14 @@ CSS用于布局的基本单位和数据结构，其包含：
 ##### relative（相对定位）
 遵循普通流，只是相对于它平时的位置进行偏移，其他元素并不知道relative的位置，不会自动让出位置或补全
 ##### absolute（绝对定位）
-脱离普通流，固定在某个位置，相对与最近被定位过的祖先,如果没有这样的祖先就以body为祖先固定在屏幕上，会随着页面滚动而移动
+脱离普通流，固定在某个位置，相对与最近被定位过的祖先,如果没有这样的祖先就以初始包含块来定位
+> 初始包含块：包含html的块
 ##### fixed
 相对与窗口固定，固定元素的位置且无视页面滚动
+
+##### sticky
+需要配合`top,bottom,left,right`使用，当元素的边缘触及到父元素的边缘时会变成类似`fixed`效果
+> 可以实现excel中的冻结单元格的效果
 ##### 链接
 [gitbooks](https://tink.gitbooks.io/fe-collections/content/ch03-css/position.html)
 
@@ -206,3 +211,36 @@ CSS用于布局的基本单位和数据结构，其包含：
 
 3. 资源顺序
   > 后者覆盖前者
+
+### flex布局
+#### 是什么
+弹性布局(一维)
+#### 用法
+父元素设置`display:flex`，那么父元素为Flex容器，而子元素自动成为flex item(项目)
+> 子元素`float，clear，vertical-align`属性会失效
+##### 属性
+* flex-direction：主轴方向
+    * row(默认)：水平方向，从左往右
+    * row-reverse：水平方向，从右往左
+    * column：垂直方向：从上往下
+    * column-reverse：水平方向，从下往上
+* flex-wrap：如果一条轴线排不下元素如何换行
+    * nowrap(默认)：不换行
+    * wrap：换行，第一行在上方
+    * warp-reverse：换行，第一行在下面
+* flex-flow：flex-direction || flex-wrap
+* justify-content：项目在主轴上对齐方式
+    * flex-start：左对齐
+    * flex-end：右对齐
+    * center: 居中
+    * space-between：两端对齐
+    * space-around：每个项目两侧间距相同
+* align-items：项目在交叉轴上如何对齐
+    * flex-start：起点对齐
+    * flex-end：终点对齐
+    * center：中点对齐
+    * baseline：项目第一行的文字基线对齐
+    * stretch(默认值)：自动占满整个容器高度
+。。。。
+##### 链接
+[阮一峰](http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html)

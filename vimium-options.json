@@ -1,0 +1,4 @@
+{
+  "keyMappings": "# Insert your preferred key mappings here.\n\nunmap d\nunmap D\nunmap u\nunmap J\nunmap K\nunmap e\nunmap E\nunmap x\nunmap X\nunmap b\nunmap B\n\nmap J scrollPageDown\nmap K scrollPageUp\nmap e Vomnibar.activateEditUrl\nmap E Vomnibar.activateEditUrlInNewTab\nmap d removeTab\nmap D restoreTab\nmap <a-h> previousTab\nmap <a-l> nextTab\nmap b goBack\nmap B goForward",
+  "settingsVersion": "2.0.3"
+}
